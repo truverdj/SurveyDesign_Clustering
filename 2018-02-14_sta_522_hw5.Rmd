@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### (1) Lohr, Chapter 5 Problem 1
 
-No, these estimates are bull. First of all, there are non-respondents, which I'm told is a problem. The estimate does not account for the non-response in any way that I can see. It also does not acount for the cluster sample design. This estimator treats each individual as though they were the draw of a simple random sample rather than elements of clusters. They do not even take the number of clusters into account. 
+No, these estimates are bad. First of all, there are non-respondents, which I'm told is a problem. The estimate does not account for the non-response in any way that I can see. It also does not acount for the cluster sample design. This estimator treats each individual as though they were the draw of a simple random sample rather than elements of clusters. They do not even take the number of clusters into account. 
 
 #### (2) Lohr, Chapter 5 Problem 3
 
