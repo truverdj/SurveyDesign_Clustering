@@ -103,5 +103,43 @@ total.cases = data.frame(svytotal(~cases, svy.cases))
 mean.cases = data.frame(svymean(~cases, svy.cases))
 knitr::kable(cbind(total.cases, mean.cases), 
              col.names = c("Total", "SE(total)", "Mean", "SE(mean)"),
-             caption = "Cases of Green Globules Sold in Upstate New York Supermarkets")
+             caption = "Cases of Green Globules Sold in Upstate New York Supermarkets",
+             digits = 2)
+```
+
+
+#### (5) Simulation Study
+
+##### (a) Creating the Population 
+
+```{r generatePopulation}
+N.clusters = N = 100
+Mi = c(rep(100,40), rep(300,40), rep(500, 20))
+run.cores = parallel::detectCores()/2
+value = parallel::mclapply(Mi,
+                           function(M){
+                             if (M == 100){
+                               rnorm(M, 40, 5)
+                             } else if (M == 300){
+                               rnorm(M, 10, 2)
+                             } else if (M == 500){
+                               rnorm(M, 100, 20)
+                             }
+                           },
+                           mc.cores = run.cores)
+```
+
+##### (b) Running the Simulation
+
+```{r runSimulation}
+T = 1000
+res = data.frame(numCases = rep(NA, T), mean = rep(NA, T), var = rep(NA, T),
+                 HTmean = rep(NA, T), HTvar = rep(NA, T))
+for (t in 1:T){
+  n.clusters = n = 10
+  svy = sample(1:N, n)
+  M_i = Mi[svy] 
+  m = sum(M_i)
+  y = value[svy]
+}
 ```
