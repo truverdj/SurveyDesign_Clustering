@@ -157,8 +157,8 @@ res.var = c(var(res$mean), var(res$HTmean))
 
 ```{r knitRes5b}
 knitr::kable(cbind(res.avg, mean(unlist(value)), var(unlist(value))), 
-             col.names = c("Avg Sample Mean", "Avg Sample Variance", "Avg HT Mean", 
-                           "Avg HT Variance", "True Population Mean", "True Population Variance"),
+             col.names = c("Avg Mean", "Avg Variance", "Avg HT", 
+                           "Avg HT Variance", "True Mean", "True Variance"),
              caption = "Population Estimates",
              digits = 2)
 knitr::kable(data.frame(res.var[1], res.var[2]),
