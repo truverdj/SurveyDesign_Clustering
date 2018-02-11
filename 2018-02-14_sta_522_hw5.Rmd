@@ -77,5 +77,31 @@ First opinions, don't name a candy Green Globules.
 ```{r settingUpTheData}
 N.cities = 45
 n.cities = 6
-
+M_i = c(52, 19,37,39,8,14)
+y = list()
+y[[1]] = c(146, 180,251,152, 72,181,171,361,73,186); m_1 = length(y[[1]])
+y[[2]] = c(99,101,52,121) ; m_2 = length(y[[2]])
+y[[3]] = c(199,179,98,63,126,87,62); m_3 = length(y[[3]])
+y[[4]] = c(226,129,57,46,86,43,85,165); m_4 = length(y[[4]])
+y[[5]] = c(12,23); m_5 = length(y[[5]])
+y[[6]] = c(87,43,59); m_6 = length(y[[6]])
+store.df = data.frame(cases = unlist(y)) %>%
+  mutate(city = c(rep(1, m_1), rep(2, m_2), rep(3, m_3), 
+                  rep(4, m_4), rep(5, m_5), rep(6, m_6))) %>%
+  mutate(numMarkets = c(rep(M_i[1], m_1), rep(M_i[2], m_2), rep(M_i[3], m_3),
+                        rep(M_i[4], m_4), rep(M_i[5], m_5), rep(M_i[6], m_6))) %>%
+  mutate(numSample = c(rep(m_1,m_1), rep(m_2, m_2), rep(m_3, m_3),
+                       rep(m_4, m_4), rep(m_5, m_5), rep(m_6, m_6))) %>%
+  mutate(N.clusters = N.cities) %>%
+  mutate(n.clusters = n.cities) %>%
+  mutate(marketID = 1:nrow(.)) %>%
+  mutate(wts = N.clusters/n.clusters * numMarkets/numSample)
+svy.cases = svydesign(~city+marketID, weights = store.df$wts, 
+                      fpc = ~store.df$N.clusters+store.df$numMarkets,
+                      data = store.df)
+total.cases = data.frame(svytotal(~cases, svy.cases))
+mean.cases = data.frame(svymean(~cases, svy.cases))
+knitr::kable(cbind(total.cases, mean.cases), 
+             col.names = c("Total", "SE(total)", "Mean", "SE(mean)"),
+             caption = "Cases of Green Globules Sold in Upstate New York Supermarkets")
 ```
