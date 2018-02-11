@@ -1,0 +1,51 @@
+---
+title: "STA 522 HW5 (Clustering)"
+author: "Daniel Truver"
+date: "2/14/2018"
+header-includes:
+  - \usepackage{amsmath}
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### (1) Lohr, Chapter 5 Problem 1
+
+No, these estimates are bull. First of all, there are non-respondents, which I'm told is a problem. The estimate does not account for the non-response in any way that I can see. It also does not acount for the cluster sample design. This estimator treats each individual as though they were the draw of a simple random sample rather than elements of clusters. They do not even take the number of clusters into account. 
+
+#### (2) Lohr, Chapter 5 Problem 3
+
+##### (a) Sampling Units 
+
+The psus are the wetlands themselves. Within the set of all possible areas one could measure the desired quantities, the wetlands are the clusters. The ssus are the sites within each of the wetlands. From the paper, it appears they were 1-$m^2$ areas determined by tossing a square of PVC pipe into the air and taking measurements where it landed. Those crazy ecologists at it again. 
+
+From the paper, it seems that the wetlands were selected were a judgement sample. I would treat the designations of "small town" and "suburban" as strata and estimate average pH using the Horvitz-Thompson estimator and treating the two suburban wetlands as clusters within the population of suburban wetlands. 
+
+##### (b) Independence of Sites
+
+The sites (ssus) should not be considered independent. From practice and intuition, samples within the same cluster tend to be correlated with each other. That is, we have broken the iid assumption. 
+
+#### (3) Lohr, Chapter 5 Problem 4
+
+##### (a) Sampling Discussion
+
+The set of all social and behavioral science articles published in 1988 is clustered by journal. The journals are then the psus. This is a single stage cluster sample since every empirical article in the journal is represented in the survey.  
+
+##### (b) Articles with Non-probability Sampling
+
+```{r setupTheData, message=FALSE, warning=FALSE}
+journals = read.csv("journals.csv") 
+library(survey)
+library(dplyr)
+N.cluster = 1285
+n.cluster = nrow(journals)
+journals = journals %>%
+  mutate(wts.cluster = N.cluster/n.cluster) %>%
+  mutate(fpc.cluster = N.cluster)
+svy.jour = svydesign(~X, weights = journals$wts.cluster, fpc = journals$fpc.cluster,
+                     data = journals)
+
+```
+
