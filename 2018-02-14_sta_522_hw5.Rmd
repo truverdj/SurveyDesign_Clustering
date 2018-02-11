@@ -115,6 +115,7 @@ knitr::kable(cbind(total.cases, mean.cases),
 ```{r generatePopulation}
 N.clusters = N = 100
 Mi = c(rep(100,40), rep(300,40), rep(500, 20))
+M_0 = sum(Mi)
 run.cores = parallel::detectCores()/2
 value = parallel::mclapply(Mi,
                            function(M){
@@ -132,6 +133,7 @@ value = parallel::mclapply(Mi,
 ##### (b) Running the Simulation
 
 ```{r runSimulation}
+set.seed(2)
 T = 1000
 res = data.frame(numCases = rep(NA, T), mean = rep(NA, T), var = rep(NA, T),
                  HTmean = rep(NA, T), HTvar = rep(NA, T))
@@ -139,7 +141,40 @@ for (t in 1:T){
   n.clusters = n = 10
   svy = sample(1:N, n)
   M_i = Mi[svy] 
-  m = sum(M_i)
+  res[t, "numCases"] = m = sum(M_i)
   y = value[svy]
+  res[t, "mean"] = sampleMean = mean(unlist(y))
+  s.sqr = sum((unlist(y) - sampleMean)^2)/(m-1)
+  res[t, "var"] = (1-m/M_0) * s.sqr/m 
+  HTtotal = (N/n * sum(unlist(lapply(y, sum))))
+  res[t, "HTmean"] = HTtotal/M_0
+  s.sqr_t = (1/(n-1)) * sum((unlist(lapply(y, sum)) - HTtotal/N)^2)
+  res[t, "HTvar"] = (1/M_0^2) * N^2*(1-n/N)*s.sqr_t/n
 }
+res.avg = rbind.data.frame(apply(res, 2, mean)[2:5])
+res.var = c(var(res$mean), var(res$HTmean))
 ```
+
+```{r knitRes5b}
+knitr::kable(cbind(res.avg, mean(unlist(value)), var(unlist(value))), 
+             col.names = c("Avg Sample Mean", "Avg Sample Variance", "Avg HT Mean", 
+                           "Avg HT Variance", "True Population Mean", "True Population Variance"),
+             caption = "Population Estimates",
+             digits = 2)
+knitr::kable(data.frame(res.var[1], res.var[2]),
+             col.names = c("Variance of Sample Mean", "Variance of HT Mean"),
+             caption = "Variance of Estimates",
+             digits = 2)
+```
+
+##### (c) Empirical Bias Results
+
+The results above suggest that $\tilde{y}$ is biased and underestimates the population mean on average, but only slightly and not much worse than the HT estimator. 
+
+##### (d) Bias in Variance
+
+The results above indicated that $\hat{var}(\tilde{y})$ is a disgusting underestimate for the between cluster variance. It is almost suspiciously low, but I cannot find an error in the code.
+
+##### (e) HT Bias
+
+The theory lines up with results for the HT estimate of the mean. The variance, on the other hand, is significantly lower than the true variance in the population.
