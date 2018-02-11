@@ -69,3 +69,13 @@ knitr::kable(data.frame(Proportion = prop_nonprob, SE = prop_SE),
 The common use of a technique does not prove its merit in court. We see this problem with eye witness testimony and bite mark analysis. Both have been used in court with disturbing frequency. Disturbing, since there is a non-trivial volume of research casting doubt on these practices. The technique and reason for non-probability sampling should be of grave concern. Was the sample due to accident, perhaps the only avaible data? Was it the judgement call of the researcher? The accuracy of the survey results is immediately questionable on the statistical level. 
 
 On the human level, it is unlikely that a jury will have knowledge of survery design. A well-presented article from "recognized scholarly and practitioner experts" will sound convincing to the unitiated. A rebuttal of such evidence would require a lecture on surveys, which, as we all know, is a guaranteed way  to win over a court room. Only Professor Reiter could pull it off because his lectures are the best and he deserves a raise. Really tremendous guy. If I ruled the world, (a) there'd be no crime under my benevolent yet absolute leadership, and (b) all survey evidence submitted to the courts would undergo review by experts in the field before it appeared in front of a judge, jury, or executioner.
+
+#### (4) Lohr, Chapter 5 Problem 7
+
+First opinions, don't name a candy Green Globules. 
+
+```{r settingUpTheData}
+N.cities = 45
+n.cities = 6
+
+```
